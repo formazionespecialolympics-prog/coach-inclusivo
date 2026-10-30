@@ -1,11 +1,12 @@
 /* Coach for Inclusion - funzionamento senza connessione */
-const V='coach-5.71-p3';
+const V='coach-5.72-p3';
 const CORE=['./','index.html','manifest.webmanifest','./icon-192.png','./icon-512.png','./apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k.startsWith('coach-')).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
  const r=e.request; if(r.method!=='GET')return;
  const u=new URL(r.url);
+ if(/\/licenza\//.test(u.pathname))return;
  const font=/^(fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.jsdelivr\.net|storage\.googleapis\.com)$/.test(u.hostname);
  if(u.origin!==location.origin&&!font)return;
  if(r.mode==='navigate'){
